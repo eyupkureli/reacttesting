@@ -1,15 +1,19 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import App from "./App";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {getUser} from './get-user';
+import { getUser } from "./get-user";
+import { mocked } from "ts-jest/utils";
 //we mock our api call function here to have a faster test.
 jest.mock("./get-user");
+const mockGetUser = mocked(getUser, true); 
+//true means if we were returning instead of a promise, we were returning an object, make amock
 
 describe("When everything is OK", () => {
-  beforeEach(() => {
+  beforeEach( async () => {
     // eslint-disable-next-line testing-library/no-render-in-setup
     render(<App />);
+    await waitFor(() => expect(mockGetUser).toHaveBeenCalled());  //when page render we waitfor api call
   });
 
   test("should render the App component without crashing", () => {
@@ -44,7 +48,7 @@ describe("When everything is OK", () => {
     screen.getByPlaceholderText("Example");
     expect(screen.getByPlaceholderText("Example")).toBeInTheDocument();
   });
-//queryBy.. does not throw error, just throw error if we use correct one for toBeNull
+  //queryBy.. does not throw error, just throw error if we use correct one for toBeNull
   test("should select the input element by its role with queryByRole", () => {
     screen.queryByRole("textbox");
     expect(screen.queryByRole("whatever")).toBeNull(); //we can use toBeNull for wrong case instead of try/catch,if we put "textbox" for toBeNull it throw error and fail

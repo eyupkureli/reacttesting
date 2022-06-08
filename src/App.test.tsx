@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-globals */
 import React from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import App from "./App";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getUser } from "./get-user";
@@ -102,9 +104,12 @@ describe("When the user enters some text in the input element", () => {
     // eslint-disable-next-line jest/valid-expect
     expect(screen.getByText(/You types: .../))
     //target logic is like event.target.value for handleChange function
-    fireEvent.change(screen.getByRole("textbox"), {
-      target: { value: "David" },
-    });
+    // fireEvent.change(screen.getByRole("textbox"), {
+    //   target: { value: "David" },
+    // });
+
+    await userEvent.type(screen.getByRole('textbox'), 'David');
+    
     expect(screen.getByText(/You types: David/)).toBeInTheDocument();
     //expect(screen.getByText(/You types: David/));
   });

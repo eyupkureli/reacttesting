@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import App from "./App";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getUser } from "./get-user";
@@ -38,8 +38,8 @@ describe("When everything is OK", () => {
   test("should select the input element by its role", () => {
     screen.getAllByRole("textbox");
     expect(screen.getAllByRole("textbox")[0]).toBeInTheDocument(); //we can also make try/catch for wrong situation
-    expect(screen.getAllByRole("textbox")[1]).toBeInTheDocument(); //for explicit multiple element
-    expect(screen.getAllByRole("textbox").length).toEqual(2); //we have two input element, we are testing it
+    //expect(screen.getAllByRole("textbox")[1]).toBeInTheDocument(); //for explicit multiple element
+    expect(screen.getAllByRole("textbox").length).toEqual(1); //we have two input element, we are testing it
   });
 
   test("should select a label element by its text", () => {
@@ -73,9 +73,9 @@ describe("when the component fetches the user successfully", () => {
   });
 
   test("should render the username passed", async () => {
-    const name = 'John';  //created name
+    const name = "John"; //created name
     mockGetUser.mockImplementationOnce(() =>
-      Promise.resolve({ id: "1", name})
+      Promise.resolve({ id: "1", name })
     );
     render(<App />);
     expect(screen.queryByText(/Username/)).toBeNull();
@@ -93,8 +93,19 @@ describe("when the component fetches the user successfully", () => {
   //   expect(await screen.findByText(`Username: ${name}`)).toBeInTheDocument();
   //   expect(await screen.findByText(/name/)).toBeInTheDocument();
   // });
+});
 
-
-
-
+describe("When the user enters some text in the input element", () => {
+  test("should display the text in the screen", async () => {
+    render(<App />);
+    await waitFor(() => expect(mockGetUser).toHaveBeenCalled()); //after enter text in the input, rerendering and we implemented this test before
+    // eslint-disable-next-line jest/valid-expect
+    expect(screen.getByText(/You types: .../))
+    //target logic is like event.target.value for handleChange function
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "David" },
+    });
+    expect(screen.getByText(/You types: David/)).toBeInTheDocument();
+    //expect(screen.getByText(/You types: David/));
+  });
 });

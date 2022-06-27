@@ -6,6 +6,7 @@
     "@types/node": "^16.11.36",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "axios": "^0.27.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
@@ -23,7 +24,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
-    "coverage":"yarn test --coverage --watchAll=false",
+    "coverage": "yarn test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,11 +47,10 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{ts, tex, js, jsx}", 
+      "src/**/*.{ts, tex, js, jsx}",
       "!src/serviceWorker.ts",
       "!src/index.tsx",
       "!src/**/*.d.ts"
-
     ]
   }
 }
